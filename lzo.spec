@@ -1,12 +1,13 @@
 Name:           lzo
 Version:        2.03
-Release:        3.1%{?dist}
+Release:        3.1%{?dist}.1
 Summary:        Data compression library with very fast (de)compression
 Group:          System Environment/Libraries
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
 Source0:        http://www.oberhumer.com/opensource/lzo/download/%{name}-%{version}.tar.gz
 Patch0:         lzo-2.02-configure.patch
+Patch1:         lzo-2.03-CVE-2014-4607.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  zlib-devel
 
@@ -43,6 +44,7 @@ This package contains development files needed for lzo.
 %prep
 %setup -q
 %patch0 -p1 -z .configure
+%patch1 -p1 -b .CVE-2014-4607
 # mark asm files as NOT needing execstack
 for i in asm/i386/src_gas/*.S; do
   echo '.section .note.GNU-stack,"",@progbits' >> $i
@@ -101,6 +103,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 30 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.03-3.1.1
+- Fixed integer overflow in decompressor
+  Resolves: CVE-2014-4607
+
 * Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 2.03-3.1
 - Rebuilt for RHEL 6
 
