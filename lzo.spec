@@ -1,12 +1,13 @@
 Name:           lzo
 Version:        2.06
-Release:        6%{?dist}
+Release:        6%{?dist}.2
 Summary:        Data compression library with very fast (de)compression
 Group:          System Environment/Libraries
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
 Source0:        http://www.oberhumer.com/opensource/lzo/download/%{name}-%{version}.tar.gz
 Patch0:         lzo-2.06-configure.patch
+Patch1:         lzo-2.06-CVE-2014-4607.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  zlib-devel
 
@@ -43,6 +44,7 @@ This package contains development files needed for lzo.
 %prep
 %setup -q
 %patch0 -p1 -z .configure
+%patch1 -p1 -b .CVE-2014-4607
 # mark asm files as NOT needing execstack
 for i in asm/i386/src_gas/*.S; do
   echo '.section .note.GNU-stack,"",@progbits' >> $i
@@ -51,9 +53,9 @@ done
 
 %build
 %configure --disable-dependency-tracking --disable-static --enable-shared
-make %{?_smp_mflags}
+make %{?_smp_mflags} CFLAGS="%{optflags} -fno-strict-aliasing"
 # build minilzo too (bz 439979)
-gcc %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
+gcc %{optflags} -fno-strict-aliasing -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
 gcc -g -shared -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
 
 
@@ -103,6 +105,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul  2 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-6.2
+- Built with -fno-strict-aliasing (rpmdiff)
+  Related: CVE-2014-4607
+
+* Wed Jul  2 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-6.1
+- Fixed integer overflow in decompressor
+  Resolves: CVE-2014-4607
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.06-6
 - Mass rebuild 2014-01-24
 
