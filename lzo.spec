@@ -1,6 +1,6 @@
 Name:           lzo
 Version:        2.06
-Release:        6%{?dist}.2
+Release:        8%{?dist}
 Summary:        Data compression library with very fast (de)compression
 Group:          System Environment/Libraries
 License:        GPLv2+
@@ -105,11 +105,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Jul  2 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-6.2
+* Wed Jul  2 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-8
 - Built with -fno-strict-aliasing (rpmdiff)
   Related: CVE-2014-4607
 
-* Wed Jul  2 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-6.1
+* Mon Jun 30 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-7
 - Fixed integer overflow in decompressor
   Resolves: CVE-2014-4607
 
