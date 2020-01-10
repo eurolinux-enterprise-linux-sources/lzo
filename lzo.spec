@@ -1,6 +1,6 @@
 Name:           lzo
 Version:        2.06
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Data compression library with very fast (de)compression
 Group:          System Environment/Libraries
 License:        GPLv2+
@@ -51,7 +51,7 @@ done
 
 %build
 %configure --disable-dependency-tracking --disable-static --enable-shared
-make %{?_smp_mflags} CFLAGS="%{optflags} -fno-strict-aliasing"
+make %{?_smp_mflags}
 # build minilzo too (bz 439979)
 gcc %{optflags} -fpic -Iinclude/lzo -o minilzo/minilzo.o -c minilzo/minilzo.c
 gcc -g -shared -o libminilzo.so.0 -Wl,-soname,libminilzo.so.0 minilzo/minilzo.o
@@ -103,8 +103,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jan  8 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 2.06-4
-- Rebuilt with -fno-strict-aliasing
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.06-6
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.06-5
+- Mass rebuild 2013-12-27
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.06-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.06-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
